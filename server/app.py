@@ -52,5 +52,10 @@ api.add_resource(ClearSession, '/clear')
 api.add_resource(IndexArticle, '/articles')
 api.add_resource(ShowArticle, '/articles/<int:id>')
 
+
+
+
+
+
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
