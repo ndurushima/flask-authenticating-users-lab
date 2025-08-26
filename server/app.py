@@ -53,7 +53,44 @@ api.add_resource(IndexArticle, '/articles')
 api.add_resource(ShowArticle, '/articles/<int:id>')
 
 
+class Login(Resource):
 
+    def post(self):
+        data = request.get_json()
+        username = data.get("username")
+
+        user = User.query.filter_by(username=username).first()
+        if not user:
+            return {"error": "User not found"}, 404
+
+        session["user_id"] = user.id
+        return UserSchema().dump(user), 200
+
+api.add_resource(Login, '/login')
+
+
+
+class CheckSession(Resource):
+
+    def get(self):
+        user_id = session.get("user_id")
+        if not user_id:
+            return {}, 401
+
+        user = db.session.get(User, user_id)
+        return UserSchema().dump(user), 200
+    
+api.add_resource(CheckSession, '/check_session')
+
+
+
+class Logout(Resource):
+
+    def delete(self):
+        session['user_id'] = None
+        return {'message': '204: No Content'}, 204
+
+api.add_resource(Logout, '/logout')
 
 
 
